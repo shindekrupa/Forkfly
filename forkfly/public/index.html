@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Forkfly – Food Delivery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fffaf3;
+      --card: #fff;
+      --tx: #2b2623;
+      --mu: #7a706a;
+      --pr: #f4511e;
+      --pr2: #ff8a3d;
+      --gr: #2e9e5b;
+      --bd: #eee3d6;
+      --sh: 0 6px 20px rgba(60, 30, 10, .08);
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media(prefers-color-scheme:dark) {
+      :root:not([data-theme=light]) {
+        --bg: #1b1715;
+        --card: #26201d;
+        --tx: #f5ede6;
+        --mu: #aa9d94;
+        --bd: #3a312c
+      }
+    }
+
+    :root[data-theme=dark] {
+      --bg: #1b1715;
+      --card: #26201d;
+      --tx: #f5ede6;
+      --mu: #aa9d94;
+      --bd: #3a312c
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--tx);
+      font: 15px/1.5 Inter, system-ui, sans-serif
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Fraunces, Georgia, serif;
+      margin: 0
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--pr2);
+      outline-offset: 2px
+    }
+
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--card);
+      border-bottom: 1px solid var(--bd);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 20px;
+      flex-wrap: wrap
+    }
+
+    .logo {
+      font: 700 22px Fraunces, serif;
+      color: var(--pr);
+      cursor: pointer
+    }
+
+    .links {
+      display: flex;
+      gap: 4px;
+      flex: 1
+    }
+
+    .links a,
+    .chip {
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 99px;
+      color: var(--mu);
+      font-weight: 500;
+      border: 0;
+      background: none
+    }
+
+    .links a:hover,
+    .links a.on {
+      background: #f4511e18;
+      color: var(--pr)
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--pr), var(--pr2));
+      color: #fff;
+      border: 0;
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px #f4511e44
+    }
+
+    .btn:active {
+      transform: scale(.97)
+    }
+
+    .btn.o {
+      background: none;
+      color: var(--pr);
+      border: 1.5px solid var(--pr)
+    }
+
+    .btn.s {
+      padding: 6px 14px;
+      font-size: 13px
+    }
+
+    .ic {
+      background: none;
+      border: 0;
+      font-size: 19px;
+      cursor: pointer;
+      position: relative
+    }
+
+    .bdg {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: var(--pr);
+      color: #fff;
+      border-radius: 99px;
+      font-size: 10px;
+      padding: 0 5px
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+      animation: fi .3s
+    }
+
+    @keyframes fi {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #ffe3cf, #ffd0b0);
+      border-radius: 28px;
+      padding: 36px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      justify-content: space-between;
+      overflow: hidden;
+      color: #2b2623
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 46px);
+      line-height: 1.1;
+      margin: 8px 0 16px
+    }
+
+    .hero .big {
+      font-size: clamp(80px, 16vw, 160px)
+    }
+
+    .sb {
+      display: flex;
+      background: #fff;
+      border-radius: 99px;
+      padding: 5px;
+      box-shadow: var(--sh);
+      max-width: 480px
+    }
+
+    .sb input {
+      flex: 1;
+      border: 0;
+      background: none;
+      padding: 8px 14px;
+      min-width: 0;
+      color: #2b2623
+    }
+
+    .sg {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 16px;
+      box-shadow: var(--sh);
+      width: 100%;
+      max-width: 480px;
+      z-index: 5;
+      padding: 6px;
+      margin-top: 6px
+    }
+
+    .sg div {
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer
+    }
+
+    .sg div:hover {
+      background: var(--bg)
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 14px 0
+    }
+
+    .cu {
+      flex: none;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 18px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: .15s
+    }
+
+    .cu:hover,
+    .cu.on {
+      border-color: var(--pr);
+      transform: translateY(-2px)
+    }
+
+    .cu b {
+      display: block;
+      font-size: 26px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--sh);
+      transition: .2s
+    }
+
+    .card.h {
+      cursor: pointer
+    }
+
+    .card.h:hover {
+      transform: translateY(-4px)
+    }
+
+    .img {
+      height: 130px;
+      display: grid;
+      place-items: center;
+      font-size: 64px;
+      position: relative
+    }
+
+    .pad {
+      padding: 14px
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: #2e9e5b22;
+      color: var(--gr);
+      font-weight: 600
+    }
+
+    .tag.r {
+      background: #f4511e22;
+      color: var(--pr)
+    }
+
+    .mu {
+      color: var(--mu);
+      font-size: 13px
+    }
+
+    .fav {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      border: 0;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      cursor: pointer
+    }
+
+    .of {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      background: var(--pr);
+      color: #fff;
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 99px
+    }
+
+    .veg {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--gr);
+      border-radius: 3px;
+      position: relative;
+      vertical-align: middle
+    }
+
+    .veg:after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: var(--gr);
+      border-radius: 50%
+    }
+
+    .veg.n {
+      border-color: #c0392b
+    }
+
+    .veg.n:after {
+      background: #c0392b
+    }
+
+    .bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0
+    }
+
+    .bar select,
+    .bar label {
+      border: 1px solid var(--bd);
+      background: var(--card);
+      border-radius: 99px;
+      padding: 6px 12px
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--bd);
+      margin: 16px 0
+    }
+
+    .tabs button {
+      background: none;
+      border: 0;
+      padding: 10px 16px;
+      cursor: pointer;
+      color: var(--mu);
+      border-bottom: 3px solid transparent;
+      font-weight: 600
+    }
+
+    .tabs .on {
+      color: var(--pr);
+      border-color: var(--pr)
+    }
+
+    .item {
+      display: flex;
+      gap: 14px;
+      padding: 14px;
+      border-bottom: 1px solid var(--bd);
+      align-items: center
+    }
+
+    .item .e {
+      font-size: 42px
+    }
+
+    .item .f {
+      flex: 1
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start
+    }
+
+    .sum {
+      position: sticky;
+      top: 80px
+    }
+
+    .sum p {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0
+    }
+
+    .mod {
+      position: fixed;
+      inset: 0;
+      background: #0007;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 16px
+    }
+
+    .mod>div {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 22px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: auto;
+      animation: fi .2s
+    }
+
+    .opt {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0
+    }
+
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--bd);
+      border-radius: 99px;
+      padding: 2px 8px
+    }
+
+    .qty button {
+      border: 0;
+      background: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--pr)
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      top: 70px;
+      z-index: 99;
+      display: grid;
+      gap: 8px
+    }
+
+    .toast div {
+      background: #2b2623;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      animation: fi .3s;
+      box-shadow: var(--sh)
+    }
+
+    .sk {
+      height: 200px;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--bd), var(--card), var(--bd));
+      background-size: 200% 100%;
+      animation: sh 1.2s infinite
+    }
+
+    @keyframes sh {
+      to {
+        background-position: -200% 0
+      }
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px 10px;
+      color: var(--mu)
+    }
+
+    .empty b {
+      font-size: 56px;
+      display: block
+    }
+
+    .steps {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px
+    }
+
+    .steps span {
+      flex: 1;
+      height: 6px;
+      border-radius: 9px;
+      background: var(--bd)
+    }
+
+    .steps .on {
+      background: var(--pr)
+    }
+
+    input.t,
+    select.t,
+    textarea.t {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      background: var(--bg);
+      margin: 4px 0 10px
+    }
+
+    .map {
+      height: 240px;
+      border-radius: 20px;
+      background: repeating-linear-gradient(0deg, transparent 0 38px, #0001 38px 40px), repeating-linear-gradient(90deg, transparent 0 38px, #0001 38px 40px), linear-gradient(135deg, #dff3e4, #e8f0fb);
+      position: relative;
+      overflow: hidden
+    }
+
+    .map i {
+      position: absolute;
+      font-style: normal;
+      font-size: 28px;
+      transition: all 1s
+    }
+
+    .tl {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0
+    }
+
+    .tl div {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      opacity: .4
+    }
+
+    .tl .d {
+      opacity: 1
+    }
+
+    .tl b {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bd);
+      display: grid;
+      place-items: center
+    }
+
+    .tl .d b {
+      background: var(--gr);
+      color: #fff
+    }
+
+    .st {
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .s0 {
+      background: #fde8e0;
+      color: #c0391b
+    }
+
+    .s1 {
+      background: #fff1cc;
+      color: #946a00
+    }
+
+    .s2 {
+      background: #dcecff;
+      color: #1e5fb3
+    }
+
+    .s3 {
+      background: #e0f5e8;
+      color: #1e7a43
+    }
+
+    .kp {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 14px 0
+    }
+
+    .kp .card {
+      padding: 14px
+    }
+
+    .kp b {
+      font: 700 24px Fraunces, serif;
+      display: block
+    }
+
+    .ch {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 140px
+    }
+
+    .ch div {
+      flex: 1;
+      background: linear-gradient(var(--pr2), var(--pr));
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      transition: height .6s
+    }
+
+    .ch span {
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 11px;
+      color: var(--mu)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    td,
+    th {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--bd)
+    }
+
+    th {
+      cursor: pointer;
+      color: var(--mu);
+      font-size: 13px
+    }
+
+    .bn {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--bd);
+      justify-content: space-around;
+      padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+      z-index: 30
+    }
+
+    .bn button {
+      background: none;
+      border: 0;
+      font-size: 11px;
+      color: var(--mu);
+      padding: 6px 10px;
+      min-height: 44px
+    }
+
+    .bn button b {
+      display: block;
+      font-size: 20px
+    }
+
+    @media(max-width:760px) {
+      .links {
+        display: none
+      }
+
+      .two {
+        grid-template-columns: 1fr
+      }
+
+      .bn {
+        display: flex
+      }
+
+      main {
+        padding: 14px 14px 90px
+      }
+
+      .hero .big {
+        display: none
+      }
+
+      .sum {
+        position: static
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="top" id="nav"></nav>
+  <main id="app"></main>
+  <div class="toast" id="toast" aria-live="polite"></div>
+  <div id="mod"></div>
+  <div class="bn" id="bn"></div>
+  <script>
+    let R = []; const API = "/api";
+    const CUI = [["🍕", "Pizza"], ["🍔", "Burgers"], ["🍜", "Chinese"], ["🍛", "Indian"], ["🍣", "Sushi"], ["🥗", "Healthy"], ["🍰", "Desserts"], ["☕", "Beverages"]];
+    const CP = [["SAVE50", "₹50 off orders above ₹299", 50, 299], ["WELCOME20", "20% off your first order", 0.2, 0], ["FREEDELIVERY", "Free delivery on ₹199+", 0, 199]];
+    let S = { v: "home", role: "customer", rid: null, tab: "Menu", cart: [], favs: [], user: null, revs: [], ins: "", ins2: "", fd: [], q: "", cu: "", veg: 0, open: 0, sort: "rec", coupon: null, step: 0, addr: "Ahmedabad, Gujarat", pay: "Cash on Delivery", oid: null, load: 1, orders: [], dark: 0, pos: null, adm: "", asc: 1 };
+
+    const GMAPS_KEY = "";/* paste your Google Maps JS API key here when self-hosting (enable Maps JavaScript + Geocoding APIs; restrict key by HTTP referrer) */
+    const HOME = { lat: 23.0225, lng: 72.5714 }, RST = { lat: 23.0395, lng: 72.5660 }; let gml = 0, wid = null;
+    const here = () => S.pos || HOME;
+    function detect() { if (!navigator.geolocation) { toast("Geolocation not supported"); return } navigator.geolocation.getCurrentPosition(p => { S.pos = { lat: p.coords.latitude, lng: p.coords.longitude }; S.addr = "Current location (" + S.pos.lat.toFixed(3) + ", " + S.pos.lng.toFixed(3) + ")"; toast("📍 Location detected"); modal(); draw() }, e => { toast(e.code == 1 ? "Location permission denied — enter address manually" : "Couldn't detect location") }, { enableHighAccuracy: true, timeout: 8000 }) }
+    function gload(cb) { if (!GMAPS_KEY) return; if (window.google && google.maps) return cb(); if (gml) return; gml = 1; window.__gm = cb; const sc = document.createElement("script"); sc.src = "https://maps.googleapis.com/maps/api/js?key=" + GMAPS_KEY + "&callback=__gm&loading=async"; sc.onerror = () => toast("Google Maps failed to load"); document.head.append(sc) }
+    function mountMaps() {
+      const els = [...document.querySelectorAll(".map[data-gm]")]; if (!els.length || !GMAPS_KEY) return; gload(() => els.forEach(el => {
+        const kind = el.dataset.gm, c = here(); el.innerHTML = ""; const m = new google.maps.Map(el, { center: c, zoom: kind == "pick" ? 15 : 13, disableDefaultUI: true, zoomControl: true });
+        if (kind == "pick") { const mk = new google.maps.Marker({ position: c, map: m, draggable: true, title: "Drag to set delivery location" }); mk.addListener("dragend", () => { const p = mk.getPosition(); S.pos = { lat: p.lat(), lng: p.lng() }; new google.maps.Geocoder().geocode({ location: S.pos }, (r, st) => { if (st == "OK" && r[0]) { S.addr = r[0].formatted_address; const i = document.getElementById("la"); if (i) i.value = S.addr; toast("📍 Location updated") } }) }); m.addListener("click", e => { mk.setPosition(e.latLng); google.maps.event.trigger(mk, "dragend") }) }
+        else {
+          const a = RST, b = c, pr = (S.prog || 0) / 4, pos = () => ({ lat: a.lat + (b.lat - a.lat) * pr, lng: a.lng + (b.lng - a.lng) * pr }); new google.maps.Marker({ position: a, map: m, label: "🏪" }); const me = new google.maps.Marker({ position: b, map: m, label: "🏠" }); const rd = new google.maps.Marker({ position: pos(), map: m, label: "🛵" }); new google.maps.Polyline({ path: [a, b], map: m, strokeColor: "#f4511e", strokeOpacity: .7, strokeWeight: 4 }); const bd = new google.maps.LatLngBounds();[a, b].forEach(x => bd.extend(x)); m.fitBounds(bd, 50);
+          if (navigator.geolocation) { if (wid != null) navigator.geolocation.clearWatch(wid); wid = navigator.geolocation.watchPosition(p => { S.pos = { lat: p.coords.latitude, lng: p.coords.longitude }; me.setPosition(S.pos) }, () => { }) }
+        }
+      }))
+    }
+    const $ = s => document.querySelector(s), rs = id => R.find(x => x.id == id);
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const ST = ["New Order", "Preparing", "Ready", "Out for Delivery", "Delivered"];
+    async function api(path, method, body) {
+      const h = { "Content-Type": "application/json" }, t = localStorage.getItem("ff_token"); if (t) h.Authorization = "Bearer " + t;
+      const res = await fetch(API + path, { method: method || "GET", headers: h, body: body ? JSON.stringify(body) : undefined });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { if (res.status == 401 && t) logout(true); throw new Error(data.error || "Something went wrong") }
+      return data
+    }
+    const fromRest = r => ({ id: r.rid, n: esc(r.name), c: esc(r.cuisine), e: esc(r.emoji), img: r.image, r: r.rating, rv: r.reviewCount, t: r.deliveryTime, fee: r.deliveryFee, p: r.priceRange, d: r.distance, v: r.pureVeg ? 1 : 0, o: esc(r.offer), open: r.isOpen ? 1 : 0, g: r.gradient, m: r.menu.map(i => [esc(i.name), esc(i.description), i.price, i.veg ? 1 : 0, esc(i.emoji), esc(i.category), i._id, i.available]) });
+    const fromOrder = o => ({ id: o.orderNo, r: o.restaurant, n: o.items.reduce((a, i) => a + i.qty, 0), t: o.bill.total, si: ST.indexOf(o.status), st: o.status == "Delivered" ? "Delivered" : o.status == "Cancelled" ? "Cancelled" : "Active", dt: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) });
+    async function loadOrders() { if (S.user && S.user.role == "customer") S.orders = (await api("/orders/mine")).map(fromOrder) }
+    const loadRests = async () => { R = (await api("/restaurants")).map(fromRest) };
+    function logout(quiet) { localStorage.removeItem("ff_token"); S.user = null; S.role = "customer"; S.favs = []; S.orders = []; S.cart = []; S.v = "home"; modal(); draw(); if (!quiet) toast("Logged out") }
+    function authM(mode) { const reg = mode == "register"; modal(`<h3>${reg ? "Create account" : "Welcome back"}</h3>${reg ? `<input class="t" id="an" placeholder="Full name" autocomplete="name" aria-label="Full name">` : ""}<input class="t" id="ae" type="email" placeholder="Email" autocomplete="email" aria-label="Email"><input class="t" id="ap" type="password" placeholder="Password (min 6 characters)" autocomplete="${reg ? "new-password" : "current-password"}" aria-label="Password">${reg ? `<select class="t" id="ar" onchange="$('#ao').style.display=this.value=='owner'?'block':'none'" aria-label="Account type"><option value="customer">I want to order food</option><option value="owner">I own a restaurant</option></select><div id="ao" style="display:none"><input class="t" id="arn" placeholder="Restaurant name" aria-label="Restaurant name"></div>` : ""}<p class="mu" id="aerr" style="color:#c0391b" role="alert"></p><button class="btn" style="width:100%" onclick="authGo('${mode}')">${reg ? "Sign up" : "Log in"}</button><p class="mu" style="text-align:center">${reg ? "Already have an account?" : "New here?"} <button class="chip" onclick="authM('${reg ? "login" : "register"}')">${reg ? "Log in" : "Create an account"}</button></p>`) }
+    async function authGo(mode) {
+      const v = id => ($("#" + id) || {}).value || "", err = m => { $("#aerr").textContent = m }, email = v("ae").trim(), password = v("ap");
+      if (!/^\S+@\S+\.\S+$/.test(email)) return err("Enter a valid email address");
+      if (password.length < 6) return err("Password must be at least 6 characters");
+      const body = { email, password };
+      if (mode == "register") { body.name = v("an").trim(); if (body.name.length < 2) return err("Enter your name"); body.role = v("ar"); if (body.role == "owner") { body.restaurantName = v("arn").trim(); if (!body.restaurantName) return err("Enter your restaurant name") } }
+      try {
+        const d = await api("/auth/" + mode, "POST", body); localStorage.setItem("ff_token", d.token); S.user = d.user; S.favs = d.user.favorites; modal();
+        await loadRests(); await loadOrders(); const a = S.after; S.after = null; S.role = d.user.role;
+        if (d.user.role != "customer") openDash(); else a ? go(a[0], a[1]) : (draw(), toast("Welcome, " + d.user.name))
+      }
+      catch (e) { err(e.message) }
+    }
+    async function openDash(keep) { try { if (S.role == "owner") S.od = await api("/owner/dashboard"); else if (S.role == "admin") { const [st, us] = await Promise.all([api("/admin/stats"), api("/admin/users")]); S.ad = { st, us } } await loadRests(); keep ? draw() : go(S.role) } catch (e) { toast(e.message) } }
+    function toast(m) { const d = document.createElement("div"); d.textContent = m; $("#toast").append(d); setTimeout(() => d.remove(), 2800) }
+    function go(v, x) { if (!S.user && ["orders", "favs", "profile", "checkout", "track"].includes(v)) { S.after = [v, x]; authM("login"); return } S.v = v; if (x) Object.assign(S, x); S.step = S.step || 0; draw(); scrollTo(0, 0) }
+    function modal(h) { $("#mod").innerHTML = h ? `<div class="mod" onclick="if(event.target==this)modal()" role="dialog" aria-modal="true"><div>${h}</div></div>` : "" }
+    const tot = () => S.cart.reduce((a, i) => a + i.p * i.q, 0), cnt = () => S.cart.reduce((a, i) => a + i.q, 0);
+    function bill() { const it = tot(), r = S.cart[0] ? rs(S.cart[0].r) : { fee: 0 }; let dis = 0, fee = r.fee; const c = S.coupon; if (c) { if (c[0] == "WELCOME20") dis = Math.round(it * .2); else if (c[0] == "SAVE50") dis = 50; else fee = 0 } const tax = Math.round(it * .05), pf = it ? 5 : 0; return { it, fee, tax, dis, pf, t: it + fee + tax + pf - dis } }
+    function stars(n) { return "⭐ " + n }
+    function nav() {
+      const cu = S.role == "customer"; $("#nav").innerHTML = `<span class="logo" onclick="go('home')">🍴 Forkfly</span>${cu ? `<div class="links">${[["home", "Home"], ["restaurants", "Restaurants"], ["offers", "Offers"], ["orders", "Orders"], ["favs", "Favorites"]].map(a => `<a class="${S.v == a[0] ? "on" : ""}" tabindex=0 onclick="go('${a[0]}')">${a[1]}</a>`).join("")}</div>
+<button class="chip" onclick="locM()" aria-label="Change location">📍 ${S.addr.split(",")[0]} ▾</button>` : `<div class="links"></div>`}
+${S.user ? `${S.user.role != "customer" ? `<select class="chip" aria-label="Switch view" onchange="S.role=this.value;this.value=='customer'?go('home'):openDash()">${["customer", S.user.role].map(r => `<option ${S.role == r ? "selected" : ""}>${r}</option>`).join("")}</select>` : ""}<button class="chip" onclick="logout()">Log out</button>` : `<button class="btn s" onclick="authM('login')">Log in</button>`}
+<button class="ic" onclick="S.dark=!S.dark;document.documentElement.dataset.theme=S.dark?'dark':'light'" aria-label="Toggle dark mode">🌓</button>
+${cu ? `<button class="ic" onclick="toast('🔔 No new notifications')" aria-label="Notifications">🔔</button><button class="ic" onclick="go('cart')" aria-label="Cart">🛒${cnt() ? `<span class="bdg">${cnt()}</span>` : ""}</button><button class="ic" onclick="go('profile')" aria-label="Profile">👤</button>` : ""}`;
+      $("#bn").style.display = cu ? "" : "none"; $("#bn").innerHTML = [["🏠", "Home", "home"], ["🔍", "Search", "restaurants"], ["❤️", "Favorites", "favs"], ["🛒", "Cart", "cart"], ["👤", "Profile", "profile"]].map(a => `<button onclick="go('${a[2]}')"><b>${a[0]}</b>${a[1]}</button>`).join("")
+    }
+    function locM() { modal(`<h3>Delivering to</h3><div class="map" data-gm="pick" style="margin:12px 0"><i style="left:45%;top:40%">📍</i></div><button class="btn o s" onclick="detect()">📍 Detect current location</button><input class="t" id="la" placeholder="Search or enter address" style="margin-top:10px"><div class="bar">${["Home", "Work", "Other"].map(x => `<label><input type=radio name=lt checked> ${x}</label>`).join("")}</div><button class="btn" onclick="S.addr=$('#la').value||S.addr;modal();draw();toast('Delivery location updated')">Save & Continue</button>`) }
+    function rcard(r) { const fv = S.favs.includes(r.id); return `<article class="card h" onclick="go('rest',{rid:${r.id},tab:'Menu'})"><div class="img" style="background:${r.img ? `url('${r.img}') center/cover,` : ""}linear-gradient(135deg,${r.g})" role="img" aria-label="${r.c} dishes">${r.img ? "" : r.e}${r.o ? `<span class="of">${r.o}</span>` : ""}<button class="fav" aria-label="Favorite" onclick="event.stopPropagation();fav(${r.id})">${fv ? "❤️" : "🤍"}</button></div><div class="pad"><b>${r.n}</b> <span class="veg ${r.v ? "" : "n"}"></span><div class="mu">${r.c} · ${r.p}</div><div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap" class="mu"><span>${stars(r.r)} (${r.rv})</span><span>${r.t} min</span><span>${r.d} km</span><span>${r.fee ? "₹" + r.fee : "Free"} delivery</span></div>${r.open ? "" : '<span class="tag r">Closed now</span>'}</div></article>` }
+    async function fav(id) { if (!S.user) { authM("login"); return } try { S.favs = (await api("/auth/favorites/" + id, "POST")).favorites; toast(S.favs.includes(id) ? "❤️ Added to favorites" : "Removed from favorites"); draw() } catch (e) { toast(e.message) } }
+    function list() { let l = R.filter(r => (!S.q || (r.n + r.c + r.m.map(m => m[0]).join()).toLowerCase().includes(S.q.toLowerCase())) && (!S.cu || r.c == S.cu || r.m.some(m => m[5] == S.cu)) && (!S.veg || r.v) && (!S.open || r.open)); const k = { rec: r => -r.rv, rating: r => -r.r, time: r => parseInt(r.t), dist: r => r.d }; return l.sort((a, b) => k[S.sort](a) - k[S.sort](b)) }
+    function rlist() { const l = list(); return `<div class="bar"><select aria-label="Sort" onchange="S.sort=this.value;draw()">${[["rec", "Recommended"], ["rating", "Rating"], ["time", "Delivery time"], ["dist", "Distance"]].map(a => `<option value=${a[0]} ${S.sort == a[0] ? "selected" : ""}>${a[1]}</option>`).join("")}</select><label><input type=checkbox ${S.veg ? "checked" : ""} onchange="S.veg=this.checked;draw()"> Pure veg</label><label><input type=checkbox ${S.open ? "checked" : ""} onchange="S.open=this.checked;draw()"> Open now</label>${S.cu || S.q ? `<button class="chip" onclick="S.cu='';S.q='';draw()">✕ Clear</button>` : ""}</div>` + (S.load ? `<div class="grid">${"<div class=sk></div>".repeat(6)}</div>` : l.length ? `<div class="grid">${l.map(rcard).join("")}</div>` : `<div class="empty"><b>🔎</b>No restaurants found. Try changing filters.</div>`) }
+    function sugg(v) { S.q = v; const b = $("#sg"); if (!v) { b.innerHTML = ""; return } const s = []; R.forEach(r => { if (r.n.toLowerCase().includes(v.toLowerCase())) s.push([`🏪 ${r.n}`, r.id]); r.m.forEach(m => m[0].toLowerCase().includes(v.toLowerCase()) && s.push([`${m[4]} ${m[0]}`, r.id])) }); b.innerHTML = `<div class="sg">${s.slice(0, 6).map(x => `<div onclick="go('rest',{rid:${x[1]},tab:'Menu'})">${x[0]}</div>`).join("") || '<div class="mu">No results</div>'}</div>` }
+    function home() {
+      return `<section class="hero"><div><span class="tag">📍 ${S.addr}</span><h1>Delicious food, delivered to your door.</h1><div style="position:relative"><div class="sb"><input id="si" aria-label="Search food" placeholder="Search pizza, biryani, restaurants…" value="${S.q}" oninput="sugg(this.value)"><button class="btn" onclick="go('restaurants')">Find Food</button></div><div id="sg"></div></div><div class="mu" style="margin-top:10px">Popular: Pizza · Burgers · Biryani</div></div><div class="big">🍽️</div></section>
+<div class="row">${CUI.map(c => `<div class="cu ${S.cu == c[1] ? "on" : ""}" tabindex=0 onclick="S.cu='${c[1]}';go('restaurants')"><b>${c[0]}</b>${c[1]}</div>`).join("")}</div><h2 style="margin:10px 0">Popular near you</h2>${rlist()}`
+    }
+    function rest() {
+      const r = rs(S.rid), cats = [...new Set(r.m.map(m => m[5]))]; const body = S.tab == "Menu" ? cats.map(c => `<h3 style="margin:16px 0 4px">${c}</h3><div class="card">${r.m.filter(m => m[5] == c).map((m, i) => { const k = r.m.indexOf(m), ci = S.cart.find(x => x.r == r.id && x.k == k); return `<div class="item"><div class="e">${m[4]}</div><div class="f"><b>${m[0]}</b> <span class="veg ${m[3] ? "" : "n"}"></span><div class="mu">${m[1]}</div><b>₹${m[2]}</b></div>${r.open && m[7] ? `<button class="btn o s" onclick="cust(${r.id},${k})">${ci ? "Add more" : "Add +"}</button>` : '<span class="tag r">Unavailable</span>'}</div>` }).join("")}</div>`).join("") : S.tab == "Reviews" ? S.revs.length ? S.revs.map(x => `<div class="card pad" style="margin-bottom:10px"><b>${esc(x.userName)}</b> ${"⭐".repeat(x.rating)}<div>${esc(x.comment)}</div></div>`).join("") : `<div class="empty"><b>💬</b>No reviews yet.</div>` : `<div class="card pad"><p>Serving ${r.c} favourites with fresh ingredients, prepared to order.</p><p class="mu">📍 12, CG Road, Ahmedabad<br>🕘 Open 11:00 AM – 11:30 PM</p></div>`;
+      return `<div class="card"><div class="img" style="height:170px;background:${r.img ? `url('${r.img}') center/cover,` : ""}linear-gradient(135deg,${r.g});font-size:90px">${r.img ? "" : r.e}</div><div class="pad"><h2>${r.n}</h2><div class="mu">${r.c} · ${stars(r.r)} (${r.rv}) · ${r.t} min · ${r.fee ? "₹" + r.fee : "Free"} delivery</div>${r.open ? "" : '<p class="tag r">Restaurant closed – opens 11:00 AM</p>'}</div></div><div class="tabs">${["Menu", "Reviews", "About"].map(t => `<button class="${S.tab == t ? "on" : ""}" onclick="restTab('${t}')">${t}</button>`).join("")}</div>${body}${cnt() ? `<div style="position:sticky;bottom:80px;margin-top:16px"><button class="btn" style="width:100%" onclick="go('cart')">🛒 ${cnt()} items · ₹${tot()} — View Cart</button></div>` : ""}`
+    }
+    function restTab(t) { S.tab = t; if (t == "Reviews") { S.revs = []; api("/restaurants/" + S.rid + "/reviews").then(x => { S.revs = x; draw() }).catch(() => { }) } draw() }
+    let C = {}; function cust(rid, k) { const m = rs(rid).m[k]; C = { rid, k, sz: 0, ex: [], q: 1, base: m[2] }; cm() }
+    const EX = [["Extra Cheese", 30], ["Jalapeno", 20], ["Extra Patty", 80]];
+    function cprice() { return (C.base + (C.sz ? 40 : 0) + C.ex.reduce((a, i) => a + EX[i][1], 0)) * C.q }
+    function cm() { const m = rs(C.rid).m[C.k]; modal(`<h3>${m[0]}</h3><p class="mu">${m[1]} · ₹${m[2]}</p><b>Size</b>${["Regular", "Large +₹40"].map((x, i) => `<label class="opt"><span>${x}</span><input type=radio name=sz ${C.sz == i ? "checked" : ""} onchange="C.sz=${i};cm()"></label>`).join("")}<b>Extras</b>${EX.map((x, i) => `<label class="opt"><span>${x[0]} +₹${x[1]}</span><input type=checkbox ${C.ex.includes(i) ? "checked" : ""} onchange="C.ex=this.checked?[...C.ex,${i}]:C.ex.filter(z=>z!=${i});cm()"></label>`).join("")}<b>Spice</b><div class="bar">${["Mild", "Medium", "Spicy"].map((x, i) => `<label><input type=radio name=sp ${i == 1 ? "checked" : ""}> ${x}</label>`).join("")}</div><textarea class="t" id="ci" placeholder="Special instructions (e.g. less salt)" aria-label="Special instructions"></textarea><div style="display:flex;justify-content:space-between;align-items:center"><span class="qty"><button aria-label="Less" onclick="C.q=Math.max(1,C.q-1);cm()">−</button>${C.q}<button aria-label="More" onclick="C.q++;cm()">+</button></span><button class="btn" onclick="addC()">Add to Cart — ₹${cprice()}</button></div>`) }
+    function addC() {
+      const r = rs(C.rid), m = r.m[C.k]; if (S.cart[0] && S.cart[0].r != C.rid) { if (!confirm("Your cart has items from another restaurant. Clear it and add this item?")) return; S.cart = [] }
+      S.cart.push({ r: C.rid, k: C.k, mid: m[6], sz: C.sz, ex: [...C.ex], n: m[0], e: m[4], p: cprice() / C.q, q: C.q, note: [C.sz ? "Large" : "Regular", ...C.ex.map(i => EX[i][0])].join(", ") }); modal(); toast("🛒 Added " + m[0]); draw()
+    }
+    function cart() { if (!S.cart.length) return `<div class="empty"><b>🛒</b>Your cart is empty.<br><br><button class="btn" onclick="go('home')">Browse restaurants</button></div>`; const b = bill(); return `<h2>Your cart · ${rs(S.cart[0].r).n}</h2><div class="two"><div class="card">${S.cart.map((i, x) => `<div class="item"><div class="e">${i.e}</div><div class="f"><b>${i.n}</b><div class="mu">${i.note}</div><b>₹${i.p * i.q}</b></div><span class="qty"><button aria-label="Less" onclick="qc(${x},-1)">−</button>${i.q}<button aria-label="More" onclick="qc(${x},1)">+</button></span><button class="ic" aria-label="Remove" onclick="S.cart.splice(${x},1);draw()">🗑</button></div>`).join("")}</div>${summ(b, `<div class="bar">${CP.map(c => `<button class="chip" style="border:1px dashed var(--pr)" onclick="coup('${c[0]}')">${c[0]}</button>`).join("")}</div><button class="btn" style="width:100%" onclick="go('checkout',{step:0})">Proceed to Checkout</button>`)}</div>` }
+    function qc(x, d) { S.cart[x].q += d; if (S.cart[x].q < 1) S.cart.splice(x, 1); draw() }
+    function coup(c) { const k = CP.find(x => x[0] == c); if (tot() < k[3]) { toast("Minimum order ₹" + k[3]); return } S.coupon = k; toast("🎉 " + c + " applied"); draw() }
+    function summ(b, x) { return `<aside class="card pad sum"><h3>Order summary</h3><p><span>Item total</span>₹${b.it}</p><p><span>Delivery fee</span>${b.fee ? "₹" + b.fee : "Free"}</p><p><span>Taxes</span>₹${b.tax}</p><p><span>Platform fee</span>₹${b.pf}</p>${b.dis ? `<p style="color:var(--gr)"><span>Discount (${S.coupon[0]})</span>−₹${b.dis}</p>` : ""}<hr><p><b>Total</b><b>₹${b.t}</b></p>${x}</aside>` }
+    function checkout() {
+      const b = bill(), st = ["Address", "Instructions", "Payment", "Review"]; const p = [`<div class="map" data-gm="pick" style="margin-bottom:12px"><i style="left:48%;top:38%">📍</i></div><label class="mu" for="da">Delivery address</label><input class="t" id="da" value="${esc(S.addr)}" oninput="S.addr=this.value" autocomplete="street-address" placeholder="House no, street, area, city">`,
+      ["Leave at door", "Call on arrival", "Avoid calling"].map(x => `<label class="card pad opt" style="margin-bottom:8px"><span>${x}</span><input type=radio name=ins ${S.ins === x ? "checked" : ""} onchange="S.ins='${x}'"></label>`).join("") + `<input class="t" placeholder="Other instructions" maxlength="150" value="${esc(S.ins2)}" oninput="S.ins2=this.value" aria-label="Other instructions">`,
+        `<label class="card pad opt"><span>💵 Cash on Delivery</span><input type=radio checked></label><p class="mu">Pay in cash to the delivery partner when your order arrives. Online payment isn't available yet.</p>`,
+      `<p><b>Deliver to:</b> ${S.addr}</p><p><b>Pay with:</b> ${S.pay}</p>${S.cart.map(i => `<p>${i.e} ${i.n} × ${i.q}</p>`).join("")}`];
+      return `<h2>Checkout</h2><div class="steps">${st.map((s, i) => `<span class="${i <= S.step ? "on" : ""}" title="${s}"></span>`).join("")}</div><p class="mu">Step ${S.step + 1} of 4 — ${st[S.step]}</p><div class="two"><div>${p[S.step]}<div class="bar">${S.step ? `<button class="btn o" onclick="S.step--;draw()">Back</button>` : ""}${S.step < 3 ? `<button class="btn" onclick="nextStep()">Continue</button>` : `<button class="btn" onclick="placeOrder()">Place Order — ₹${b.t}</button>`}</div></div>${summ(b, "")}</div>`
+    }
+    function nextStep() { if (S.step == 0 && (S.addr || "").trim().length < 5) return toast("Please enter a full delivery address"); S.step++; draw() }
+    let placing = 0;
+    async function placeOrder() {
+      if (placing) return; placing = 1; modal(`<div class="empty"><b>⏳</b>Placing your order…</div>`);
+      try {
+        const o = await api("/orders", "POST", { restaurant: S.cart[0].r, items: S.cart.map(i => ({ menuId: i.mid, qty: i.q, size: i.sz, extras: i.ex })), address: S.addr, instructions: [S.ins, S.ins2].filter(Boolean).join(" · "), coupon: S.coupon ? S.coupon[0] : null });
+        S.oid = o.orderNo; S.prog = 0; S.cart = []; S.coupon = null; S.step = 0; S.ins = ""; S.ins2 = ""; await loadOrders();
+        modal(`<div class="empty"><b style="color:var(--gr)">✓</b><h3>Order placed</h3><p>Order #${o.orderNo}<br>Pay ₹${o.bill.total} in cash on delivery<br>Estimated Delivery: 30–40 minutes</p><button class="btn" onclick="modal();go('track')">Track Order</button> <button class="btn o" onclick="modal();go('orders')">View Order</button></div>`); toast("🔔 Order placed")
+      }
+      catch (e) { modal(`<div class="empty"><b>❌</b><h3>Couldn't place order</h3><p>${esc(e.message)}</p><button class="btn" onclick="modal()">OK</button></div>`) }
+      placing = 0
+    }
+    let T; function track() {
+      const P = ["Restaurant confirmed", "Preparing", "Order ready", "Out for delivery", "Delivered"], ic = ["📍", "👨‍🍳", "📦", "🛵", "🏠"], p = S.prog || 0; clearInterval(T); if (p < 4) T = setInterval(async () => { if (S.v != "track") return clearInterval(T); try { const o = await api("/orders/" + S.oid), n = ST.indexOf(o.status); if (o.status == "Cancelled") { clearInterval(T); toast("This order was cancelled"); return go("orders") } if (n > S.prog) { S.prog = n; toast("🔔 " + P[n]); draw(); if (n == 4) { clearInterval(T); setTimeout(() => review(o.restaurant), 800) } } } catch (e) { } }, 5000);
+      return `<h2>Live tracking · #${S.oid || ""}</h2><p>${p < 4 ? `Your order will arrive in approximately ${(4 - p) * 6} minutes.` : "Delivered. Enjoy your meal!"}</p><div class="map" data-gm="track"><i style="left:12%;top:60%">🏪</i><i style="left:${12 + p * 18}%;top:${60 - p * 8}%">🛵</i><i style="left:84%;top:25%">🏠</i></div><div class="tl">${P.map((x, i) => `<div class="${i <= p ? "d" : ""}"><b>${i <= p ? "✓" : ic[i]}</b>${x}</div>`).join("")}</div><div class="card pad">🛵 Ravi Patel · ⭐ 4.8 · ${((4 - p) * .8).toFixed(1)} km away <button class="btn o s" onclick="toast('Calling…')">📞 Call</button> <button class="btn o s" onclick="toast('Chat opened')">💬 Chat</button></div>`
+    }
+    let RV = {};
+    const starRow = () => [1, 2, 3, 4, 5].map(n => `<button class="ic" aria-label="${n} stars" onclick="RV.n=${n};$('#rst').innerHTML=starRow()">${n <= (RV.n || 0) ? "⭐" : "☆"}</button>`).join("");
+    function review(rid) { RV = {}; modal(`<h3>Rate your order</h3><div id="rst">${starRow()}</div><textarea class="t" id="rc" maxlength="300" placeholder="Write your review (optional)" aria-label="Review"></textarea><p class="mu" id="aerr" style="color:#c0391b" role="alert"></p><button class="btn" onclick="sendReview(${rid})">Submit review</button>`) }
+    async function sendReview(rid) {
+      if (!RV.n) return ($("#aerr").textContent = "Please select a star rating");
+      try { await api("/restaurants/" + rid + "/reviews", "POST", { rating: RV.n, comment: $("#rc").value.trim() }); modal(); toast("Thanks for your review!"); await loadRests(); draw() } catch (e) { $("#aerr").textContent = e.message }
+    }
+    async function cancelOrder(no) { if (!confirm("Cancel this order?")) return; try { await api("/orders/" + no + "/cancel", "PATCH"); await loadOrders(); draw(); toast("Order cancelled") } catch (e) { toast(e.message) } }
+    function orders() { const tb = S.tab == "Menu" ? "Active" : S.tab; const l = S.orders.filter(o => tb == "Active" ? o.st == "Active" : tb == "Previous" ? o.st == "Delivered" : o.st == "Cancelled"); return `<h2>Your orders</h2><div class="tabs">${["Active", "Previous", "Cancelled"].map(t => `<button class="${tb == t ? "on" : ""}" onclick="S.tab='${t}';draw()">${t}</button>`).join("")}</div>` + (l.length ? l.map(o => `<div class="card pad" style="margin-bottom:10px"><b>Order #${o.id}</b> <span class="st ${o.st == "Delivered" ? "s3" : o.st == "Cancelled" ? "s0" : "s2"}">${o.st}</span><div>${(rs(o.r) || { n: "Restaurant" }).n} · ${o.n} items · ₹${o.t} · ${o.dt}</div><div class="bar"><button class="btn o s" onclick="${o.st == "Active" ? `S.oid='${o.id}';S.prog=${o.si};go('track')` : "toast('Order details opened')"}">${o.st == "Active" ? "Track" : "View Details"}</button><button class="btn s" onclick="go('rest',{rid:${o.r},tab:'Menu'})">Reorder</button>${o.st == "Delivered" ? `<button class="btn o s" onclick="review(${o.r})">Rate Order</button>` : ""}${o.si == 0 ? `<button class="btn o s" onclick="cancelOrder('${o.id}')">Cancel</button>` : ""}</div></div>`).join("") : `<div class="empty"><b>🧾</b>No orders here yet.</div>`) }
+    function favs() { const l = R.filter(r => S.favs.includes(r.id)); return `<h2>Favorites</h2>` + (l.length ? `<div class="grid" style="margin-top:12px">${l.map(rcard).join("")}</div>` : `<div class="empty"><b>🤍</b>Nothing saved yet.</div>`) }
+    function offers() { const O = [["50% OFF", "WELCOME50", "Up to ₹100", 199, "31 Oct 2026"], ["Free Delivery", "FREEDELIVERY", "Orders ₹199+", 199, "15 Nov 2026"], ["₹100 OFF", "SAVE100", "Orders ₹499+", 499, "30 Oct 2026"], ["Weekend Special", "WEEKEND", "20% off Sat–Sun", 299, "31 Dec 2026"]]; return `<h2>Offers & coupons</h2><div class="grid" style="margin-top:12px">${O.map(o => `<div class="card pad" style="border-left:6px solid var(--pr)"><h2 style="color:var(--pr)">${o[0]}</h2><p>${o[2]} · Min ₹${o[3]}</p><p class="mu">Valid till ${o[4]} · T&C apply</p><button class="btn o s" onclick="navigator.clipboard&&navigator.clipboard.writeText('${o[1]}').catch(()=>{});toast('Copied ${o[1]}')">📋 ${o[1]}</button></div>`).join("")}</div>` }
+    function profile() { return `<h2>Profile</h2><p class="mu">${esc(S.user.name)} · ${esc(S.user.email)}</p><div class="card" style="margin-top:12px">${["Personal Information", "Saved Addresses", "Payment Methods", "Order History", "Favorites", "Notifications", "Coupons", "Reviews", "Help & Support", "Privacy"].map(x => `<div class="item" style="cursor:pointer" tabindex=0 onclick="${x == "Order History" ? "go('orders')" : x == "Favorites" ? "go('favs')" : x == "Help & Support" ? "help()" : "toast('" + x + " opened')"}">${x}<span style="margin-left:auto">›</span></div>`).join("")}<div class="item" style="color:var(--pr);cursor:pointer" onclick="logout()">Logout</div></div>` }
+    function help() { modal(`<h3>Help & Support</h3>${["Order issue", "Payment issue", "Missing item", "Wrong item", "Late delivery", "Refund", "Account issue"].map(x => `<div class="item" style="cursor:pointer" onclick="modal();toast('Complaint #C${Math.floor(Math.random() * 900 + 100)} created: ${x}')">${x}</div>`).join("")}<button class="btn" onclick="toast('Chat support connecting…')">💬 Chat with support</button>`) }
+    function bars(a, l) { const m = Math.max(...a); return `<div class="ch" style="margin-bottom:26px">${a.map((v, i) => `<div style="height:${v / m * 100}%" title="${v}"><span>${l[i]}</span></div>`).join("")}</div>` }
+    const loading = `<div class="empty"><b>⏳</b>Loading…</div>`;
+    function owner() {
+      const d = S.od; if (!d) return loading; const r = d.restaurant, k = d.stats;
+      return `<h2>${esc(r.name)} · Dashboard</h2><div class="bar"><button class="btn o s" onclick="setImg()">🖼 ${r.image ? "Change" : "Add"} restaurant photo</button><label>Accepting orders <input type=checkbox ${r.isOpen ? "checked" : ""} onchange="ownerPut({isOpen:this.checked})"></label></div><div class="kp">${[["Today's Orders", k.today], ["Revenue", "₹" + k.revenue], ["Pending", k.pending], ["Completed", k.completed], ["Avg Rating", "⭐ " + r.rating]].map(x => `<div class="card"><span class="mu">${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div><h3 style="margin:18px 0 6px">Orders</h3><div class="card">${d.orders.length ? d.orders.map(o => { const i = ST.indexOf(o.status), done = i == 4 || o.status == "Cancelled", cl = o.status == "Cancelled" ? "s0" : ["s1", "s1", "s2", "s2", "s3"][i]; return `<div class="item"><div class="f"><b>#${o.orderNo}</b> ${esc(o.customerName)}<div class="mu">${o.items.map(x => esc(x.name) + " ×" + x.qty).join(", ")} · ₹${o.bill.total} · Cash</div><div class="mu">📍 ${esc(o.address)}</div>${o.instructions ? `<div class="mu">📝 ${esc(o.instructions)}</div>` : ""}</div><span class="st ${cl}">${o.status}</span>${done ? "" : `<button class="btn o s" onclick="orderAct('${o.orderNo}','advance')">Mark ${ST[i + 1]}</button><button class="btn o s" onclick="orderAct('${o.orderNo}','reject')">Reject</button>`}</div>` }).join("") : `<div class="empty"><b>🧾</b>No orders yet.</div>`}</div><h3 style="margin:18px 0 6px">Menu</h3><div class="card">${r.menu.map(m => `<div class="item"><div class="e">${esc(m.emoji)}</div><div class="f"><b>${esc(m.name)}</b><div class="mu">₹${m.price} · ${esc(m.category)}</div></div><label>Available <input type=checkbox ${m.available ? "checked" : ""} onchange="menuAct('${m._id}','toggle')"></label><button class="btn o s" onclick="foodForm('${m._id}')">Edit</button><button class="btn o s" onclick="menuAct('${m._id}','delete')">Delete</button></div>`).join("")}<div class="pad"><button class="btn s" onclick="foodForm()">+ Add food</button></div></div>`
+    }
+    async function orderAct(no, action) { try { await api("/owner/orders/" + no, "PATCH", { action }); await openDash(true) } catch (e) { toast(e.message) } }
+    async function ownerPut(b) { try { await api("/owner/restaurant", "PUT", b); toast("Saved"); await openDash(true) } catch (e) { toast(e.message) } }
+    function setImg() { const u = prompt("Paste an image link for your restaurant (https://…)"); if (u) ownerPut({ image: u.trim() }) }
+    async function menuAct(id, a) { try { if (a == "delete") { if (!confirm("Delete this item?")) return; await api("/owner/menu/" + id, "DELETE") } else { const m = S.od.restaurant.menu.find(x => x._id == id); await api("/owner/menu/" + id, "PUT", { available: !m.available }) } await openDash(true) } catch (e) { toast(e.message); openDash(true) } }
+    function foodForm(id) {
+      const m = id ? S.od.restaurant.menu.find(x => x._id == id) : { name: "", description: "", price: "", category: "Main Course", emoji: "🍽️", veg: true };
+      modal(`<h3>${id ? "Edit" : "Add"} food</h3><input class="t" id="fn" placeholder="Name" value="${esc(m.name)}" aria-label="Name"><input class="t" id="fd" placeholder="Description" value="${esc(m.description)}" aria-label="Description"><input class="t" id="fp" type="number" min="1" placeholder="Price (₹)" value="${m.price}" aria-label="Price"><input class="t" id="fc" placeholder="Category (e.g. Starters)" value="${esc(m.category)}" aria-label="Category"><input class="t" id="fe" placeholder="Emoji" value="${esc(m.emoji)}" maxlength="4" aria-label="Emoji"><label class="opt"><span>Vegetarian</span><input type=checkbox id="fv" ${m.veg ? "checked" : ""}></label><p class="mu" id="aerr" style="color:#c0391b" role="alert"></p><button class="btn" onclick="saveFood('${id || ""}')">Save</button>`)
+    }
+    async function saveFood(id) {
+      const b = { name: $("#fn").value.trim(), description: $("#fd").value.trim(), price: Number($("#fp").value), category: $("#fc").value.trim() || "Main Course", emoji: $("#fe").value.trim() || "🍽️", veg: $("#fv").checked }, err = m => { $("#aerr").textContent = m };
+      if (!b.name) return err("Enter the item name"); if (!(b.price > 0)) return err("Enter a price above 0");
+      try { await api(id ? "/owner/menu/" + id : "/owner/menu", id ? "PUT" : "POST", b); modal(); toast("Saved"); await openDash(true) } catch (e) { err(e.message) }
+    }
+    function admin() {
+      const d = S.ad; if (!d) return loading; const q = S.adm.toLowerCase(), U = d.us.filter(u => (u.name + u.email + u.role).toLowerCase().includes(q)).sort((a, b) => S.asc * a.name.localeCompare(b.name)), bs = d.st.byStatus;
+      return `<h2>Admin overview</h2><div class="kp">${[["Users", d.st.users], ["Restaurants", d.st.restaurants], ["Orders", d.st.orders], ["Revenue (delivered)", "₹" + d.st.revenue]].map(k => `<div class="card"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}</div><div class="card pad"><b>Orders by status</b><br><br>${bs.length ? bars(bs.map(x => x.count), bs.map(x => x.status.split(" ")[0])) : `<span class="mu">No orders yet.</span>`}</div><h3 style="margin:18px 0 6px">Users</h3><input class="t" placeholder="Search users…" aria-label="Search users" value="${esc(S.adm)}" oninput="S.adm=this.value;draw();const i=$('#app input');i.focus();i.setSelectionRange(i.value.length,i.value.length)"><div class="card" style="overflow-x:auto"><table><tr><th onclick="S.asc*=-1;draw()">Name ⇅</th><th>Role</th><th>Status</th><th>Actions</th></tr>${U.map(u => `<tr><td>${esc(u.name)}<div class="mu">${esc(u.email)}</div></td><td>${u.role}</td><td><span class="st ${u.status == "Active" ? "s3" : "s0"}">${u.status}</span></td><td>${u.role == "admin" ? "" : `<button class="btn o s" onclick="adminAct('users/${u._id}/status','PATCH')">${u.status == "Active" ? "Suspend" : "Activate"}</button> <button class="btn o s" onclick="adminAct('users/${u._id}','DELETE','Delete this user?')">Delete</button>`}</td></tr>`).join("")}</table></div><h3 style="margin:18px 0 6px">Restaurants</h3><div class="card" style="overflow-x:auto"><table><tr><th>Name</th><th>Cuisine</th><th>Rating</th><th>Status</th><th>Actions</th></tr>${R.map(r => `<tr><td>${r.e} ${r.n}</td><td>${r.c}</td><td>⭐ ${r.r} (${r.rv})</td><td><span class="st ${r.open ? "s3" : "s0"}">${r.open ? "Open" : "Closed"}</span></td><td><button class="btn o s" onclick="adminAct('restaurants/${r.id}/open','PATCH')">${r.open ? "Close" : "Open"}</button> <button class="btn o s" onclick="adminAct('restaurants/${r.id}','DELETE','Delete this restaurant?')">Delete</button></td></tr>`).join("")}</table></div>`
+    }
+    async function adminAct(path, method, msg) { if (msg && !confirm(msg)) return; try { await api("/admin/" + path, method); await openDash(true) } catch (e) { toast(e.message) } }
+    function draw() { nav(); setTimeout(mountMaps, 0); const V = { home, restaurants: () => `<h2>All restaurants</h2>${rlist()}`, rest, cart, checkout, track, orders, favs, offers, profile, owner, admin }; if (S.role == "customer" && ["owner", "admin"].includes(S.v)) S.v = "home"; $("#app").innerHTML = V[S.v](); $("#bn").querySelectorAll("button").forEach(b => b.disabled = 0) }
+    async function boot() {
+      draw();
+      try { await loadRests() } catch (e) { toast("Couldn't load restaurants. Is the server running?") }
+      S.load = 0;
+      if (localStorage.getItem("ff_token")) { try { S.user = await api("/auth/me"); S.favs = S.user.favorites; await loadOrders() } catch (e) { } }
+      draw()
+    }
+    boot();
+  </script>
+</body>
+
+</html>
